@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>今日摸鱼指南 🐟</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-start: #fdf6e3;
+      --bg-end: #fef9ef;
+      --card-bg: rgba(255,255,255,0.82);
+      --accent: #ff9a56;
+      --accent2: #ff6b8a;
+      --text: #3d3529;
+      --text-light: #8a7e6b;
+      --shadow: rgba(180,160,130,0.15);
+    }
+
+    body {
+      font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(160deg, var(--bg-start) 0%, var(--bg-end) 100%);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* 浮动装饰 */
+    .floating-decor {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      font-size: 2rem;
+      opacity: 0.15;
+      animation: floatUp 12s ease-in-out infinite;
+    }
+    .floating-decor:nth-child(1) { left: 8%; top: 15%; animation-delay: 0s; font-size: 2.5rem; }
+    .floating-decor:nth-child(2) { left: 85%; top: 25%; animation-delay: 3s; font-size: 1.8rem; }
+    .floating-decor:nth-child(3) { left: 20%; top: 70%; animation-delay: 6s; font-size: 2.2rem; }
+    .floating-decor:nth-child(4) { left: 75%; top: 80%; animation-delay: 9s; font-size: 1.6rem; }
+    .floating-decor:nth-child(5) { left: 50%; top: 10%; animation-delay: 2s; font-size: 2rem; }
+    .floating-decor:nth-child(6) { left: 92%; top: 55%; animation-delay: 5s; font-size: 1.4rem; }
+
+    @keyframes floatUp {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      25% { transform: translateY(-18px) rotate(5deg); }
+      50% { transform: translateY(-8px) rotate(-3deg); }
+      75% { transform: translateY(-22px) rotate(2deg); }
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 420px;
+      margin: 0 auto;
+      padding: 40px 20px 60px;
+    }
+
+    /* 头部 */
+    .header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .header .fish-icon {
+      font-size: 3.2rem;
+      display: inline-block;
+      animation: fishSwim 3s ease-in-out infinite;
+    }
+    @keyframes fishSwim {
+      0%, 100% { transform: translateX(0) scaleX(1); }
+      25% { transform: translateX(12px) scaleX(1); }
+      50% { transform: translateX(0) scaleX(1); }
+      75% { transform: translateX(-12px) scaleX(-1); }
+    }
+    .header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-top: 8px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .header p {
+      font-size: 0.88rem;
+      color: var(--text-light);
+      margin-top: 6px;
+      font-weight: 300;
+    }
+
+    /* 卡片 */
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 28px 24px;
+      box-shadow: 0 8px 32px var(--shadow), 0 1px 0 rgba(255,255,255,0.6) inset;
+      border: 1px solid rgba(255,255,255,0.5);
+      margin-bottom: 20px;
+    }
+
+    /* 表单 */
+    .form-group {
+      margin-bottom: 22px;
+    }
+    .form-group:last-child { margin-bottom: 0; }
+
+    .form-label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text-light);
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 14px 18px;
+      border: 2px solid rgba(180,160,130,0.2);
+      border-radius: 16px;
+      font-size: 1rem;
+      font-family: inherit;
+      color: var(--text);
+      background: rgba(255,255,255,0.6);
+      transition: all 0.3s ease;
+      outline: none;
+    }
+    .form-input:focus {
+      border-color: var(--accent);
+      background: rgba(255,255,255,0.9);
+      box-shadow: 0 0 0 4px rgba(255,154,86,0.1);
+    }
+    .form-input::placeholder { color: #c4b9a8; }
+
+    /* 选项按钮组 */
+    .option-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .option-btn {
+      padding: 10px 18px;
+      border: 2px solid rgba(180,160,130,0.2);
+      border-radius: 50px;
+      background: rgba(255,255,255,0.5);
+      font-size: 0.92rem;
+      font-family: inherit;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .option-btn:hover {
+      border-color: var(--accent);
+      background: rgba(255,154,86,0.08);
+    }
+    .option-btn.active {
+      border-color: var(--accent);
+      background: linear-gradient(135deg, rgba(255,154,86,0.15), rgba(255,107,138,0.15));
+      color: var(--accent);
+      font-weight: 500;
+      box-shadow: 0 2px 12px rgba(255,154,86,0.15);
+    }
+
+    /* 性别特殊样式 */
+    .gender-group .option-btn { min-width: 80px; text-align: center; }
+
+    /* 提交按钮 */
+    .submit-btn {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      font-family: inherit;
+      color: #fff;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 24px rgba(255,130,90,0.3);
+      -webkit-tap-highlight-color: transparent;
+      position: relative;
+      overflow: hidden;
+    }
+    .submit-btn::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+      transition: left 0.5s;
+    }
+    .submit-btn:hover::after { left: 100%; }
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(255,130,90,0.4);
+    }
+    .submit-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 4px 16px rgba(255,130,90,0.3);
+    }
+    .submit-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* 结果页面 */
+    .result-section {
+      display: none;
+      animation: fadeSlideUp 0.6s ease;
+    }
+    .result-section.show { display: block; }
+
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 32px 24px;
+      box-shadow: 0 8px 32px var(--shadow), 0 1px 0 rgba(255,255,255,0.6) inset;
+      border: 1px solid rgba(255,255,255,0.5);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .result-card::before {
+      content: '';
+      position: absolute;
+      top: -40%; left: -40%;
+      width: 180%; height: 180%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,154,86,0.06) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .result-greeting {
+      font-size: 0.92rem;
+      color: var(--text-light);
+      margin-bottom: 6px;
+    }
+    .result-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .result-divider {
+      width: 50px;
+      height: 3px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 3px;
+      margin: 0 auto 20px;
+    }
+
+    .result-label {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      margin-bottom: 4px;
+      letter-spacing: 1px;
+    }
+
+    .result-tags {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+    .result-tag {
+      padding: 6px 14px;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      background: rgba(255,154,86,0.1);
+      color: var(--accent);
+      border: 1px solid rgba(255,154,86,0.2);
+    }
+
+    .moyu-icon {
+      font-size: 3rem;
+      margin-bottom: 12px;
+      display: inline-block;
+      animation: bounceIn 0.8s ease;
+    }
+    @keyframes bounceIn {
+      0% { transform: scale(0); }
+      50% { transform: scale(1.2); }
+      70% { transform: scale(0.9); }
+      100% { transform: scale(1); }
+    }
+
+    .moyu-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+    .moyu-desc {
+      font-size: 0.92rem;
+      color: var(--text-light);
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+
+    .moyu-tip {
+      padding: 14px 18px;
+      background: linear-gradient(135deg, rgba(255,154,86,0.08), rgba(255,107,138,0.08));
+      border-radius: 16px;
+      font-size: 0.82rem;
+      color: var(--text-light);
+      line-height: 1.6;
+      border: 1px solid rgba(255,154,86,0.1);
+      margin-bottom: 24px;
+    }
+    .moyu-tip strong {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 12px;
+    }
+    .btn-again {
+      flex: 1;
+      padding: 14px;
+      border: 2px solid rgba(180,160,130,0.2);
+      border-radius: 50px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      font-family: inherit;
+      color: var(--text);
+      background: rgba(255,255,255,0.6);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-again:hover {
+      border-color: var(--accent);
+      background: rgba(255,154,86,0.08);
+    }
+    .btn-retry {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      font-family: inherit;
+      color: #fff;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 16px rgba(255,130,90,0.25);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-retry:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px rgba(255,130,90,0.35);
+    }
+
+    /* 加载动画 */
+    .loading-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(253,246,227,0.85);
+      backdrop-filter: blur(10px);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    .loading-overlay.show { display: flex; }
+
+    .loading-fish {
+      font-size: 3rem;
+      animation: loadingSwim 1.5s ease-in-out infinite;
+    }
+    @keyframes loadingSwim {
+      0%, 100% { transform: translateX(-20px) scaleX(1) rotate(-5deg); }
+      50% { transform: translateX(20px) scaleX(-1) rotate(5deg); }
+    }
+    .loading-text {
+      font-size: 0.95rem;
+      color: var(--text-light);
+      margin-top: 16px;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+
+    .footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.75rem;
+      color: rgba(138,126,107,0.5);
+    }
+
+    /* 输入区域 */
+    .input-section { animation: fadeSlideUp 0.5s ease; }
+  </style>
+</head>
+<body>
+
+  <!-- 浮动装饰 -->
+  <div class="floating-decor">🐟</div>
+  <div class="floating-decor">🌿</div>
+  <div class="floating-decor">☁️</div>
+  <div class="floating-decor">🍵</div>
+  <div class="floating-decor">🌸</div>
+  <div class="floating-decor">💤</div>
+
+  <!-- 加载动画 -->
+  <div class="loading-overlay" id="loading">
+    <div class="loading-fish">🐟</div>
+    <div class="loading-text">正在为你寻找最佳摸鱼姿势...</div>
+  </div>
+
+  <div class="container">
+    <!-- 头部 -->
+    <div class="header">
+      <div class="fish-icon">🐟</div>
+      <h1>今日摸鱼指南</h1>
+      <p>忙里偷闲，才是生活的艺术</p>
+    </div>
+
+    <!-- 输入区域 -->
+    <div class="input-section" id="inputSection">
+      <div class="card">
+        <div class="form-group">
+          <label class="form-label">你的名字</label>
+          <input type="text" class="form-input" id="nameInput" placeholder="请输入你的名字" maxlength="10" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">你的性别</label>
+          <div class="option-group gender-group" data-field="gender">
+            <button class="option-btn" data-value="男">🧑 男</button>
+            <button class="option-btn" data-value="女">👩 女</button>
+            <button class="option-btn" data-value="保密">🤫 保密</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">你的星座</label>
+          <div class="option-group" data-field="zodiac">
+            <button class="option-btn" data-value="白羊座">♈ 白羊</button>
+            <button class="option-btn" data-value="金牛座">♉ 金牛</button>
+            <button class="option-btn" data-value="双子座">♊ 双子</button>
+            <button class="option-btn" data-value="巨蟹座">♋ 巨蟹</button>
+            <button class="option-btn" data-value="狮子座">♌ 狮子</button>
+            <button class="option-btn" data-value="处女座">♍ 处女</button>
+            <button class="option-btn" data-value="天秤座">♎ 天秤</button>
+            <button class="option-btn" data-value="天蝎座">♏ 天蝎</button>
+            <button class="option-btn" data-value="射手座">♐ 射手</button>
+            <button class="option-btn" data-value="摩羯座">♑ 摩羯</button>
+            <button class="option-btn" data-value="水瓶座">♒ 水瓶</button>
+            <button class="option-btn" data-value="双鱼座">♓ 双鱼</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">今日心情</label>
+          <div class="option-group" data-field="mood">
+            <button class="option-btn" data-value="开心">😊 开心</button>
+            <button class="option-btn" data-value="难过">😢 难过</button>
+            <button class="option-btn" data-value="平静">😌 平静</button>
+            <button class="option-btn" data-value="兴奋">🤩 兴奋</button>
+            <button class="option-btn" data-value="激动">🔥 激动</button>
+            <button class="option-btn" data-value="无语">😑 无语</button>
+          </div>
+        </div>
+      </div>
+
+      <button class="submit-btn" id="submitBtn" disabled>🐟 开始摸鱼</button>
+    </div>
+
+    <!-- 结果区域 -->
+    <div class="result-section" id="resultSection">
+      <div class="result-card">
+        <div class="result-greeting" id="resultGreeting"></div>
+        <div class="result-name" id="resultName"></div>
+        <div class="result-divider"></div>
+        <div class="result-tags" id="resultTags"></div>
+        <div class="moyu-icon" id="moyuIcon"></div>
+        <div class="moyu-title" id="moyuTitle"></div>
+        <div class="moyu-desc" id="moyuDesc"></div>
+        <div class="moyu-tip" id="moyuTip"></div>
+        <div class="btn-group">
+          <button class="btn-again" id="btnAgain">重新填写</button>
+          <button class="btn-retry" id="btnRetry">换一个 🎲</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">摸鱼有度，快乐无限 ✨</div>
+  </div>
+
+<script>
+(function() {
+
+  // ====== 摸鱼活动数据库 ======
+  const activities = {
+    开心: [
+      { icon: '🌸', title: '与路边小花共舞', desc: '走出去，找一朵正在风里摇晃的小花，跟着它的节奏微微晃动身体。你不是在跳舞，你只是恰好和花同频了。', tip: '如果有人问你在干什么，就说"我在配合大自然的编舞"。理直气壮，谁也说不出毛病。' },
+      { icon: '💌', title: '写一封信给三年后的自己', desc: '用便利贴写一封信，塞进抽屉最深处。写什么都行——"希望你买了那双鞋""希望你还记得今天很开心"。', tip: '三年后大扫除翻到这张纸的瞬间，快乐会重新降临一次，相当于快乐复利。' },
+      { icon: '🐦', title: '偷听小鸟聊天', desc: '找到窗外最近的鸟叫声，闭上眼睛认真听。试着分辨它们是在吵架、聊天还是在唱歌。给它们编一段对话。', tip: '据非权威统计，下午两点的鸟叫翻译过来大概是"这人怎么还在上班"。' },
+      { icon: '🌿', title: '把小花戴在手腕上', desc: '去楼下摘一朵小野花（或者一片好看的叶子），用发圈或者胶带固定在手腕上。恭喜你，你现在是这条街上最时尚的人。', tip: '高阶玩法：给你的花手链取一个奢侈品名字，比如"Dior 2026 春季限定·野草系列"。' },
+      { icon: '😆', title: '在办公室放声大笑', desc: '就现在，毫无理由地笑出声来。就笑十秒钟。同事会疑惑地看你，但别在意——你是在散播快乐病毒。', tip: '如果有人问"你笑什么"，回答"想到了一件好笑的事"。至于是什么事？你也不知道，但这让它更好笑了。' },
+      { icon: '🌻', title: '找到一朵花，向它鞠躬', desc: '走出门，找到一朵正在开的花。对它弯腰鞠个躬，说一声"辛苦了，开得真好"。然后转身离开，留下一个潇洒的背影。', tip: '这是你和自然之间的秘密礼仪。花不会告诉任何人的，放心。' },
+      { icon: '☁️', title: '给云朵起名字', desc: '走到窗边或阳台，找到天上最好看的三朵云。分别给它们取名字——"大白""棉花糖二号""那个长得像老板的"。', tip: '拍照发朋友圈，配文"今天的同事们状态都不错"。高级感拉满。' },
+      { icon: '🤝', title: '和路边小花牵手', desc: '找一朵矮矮的小花，蹲下来，轻轻用手指碰碰它的花瓣。你们现在是朋友了。这段友情虽然短暂，但很真诚。', tip: '如果是蒲公英，你还可以帮它把孩子们送去远方——你就是它的顺风快递。' },
+      { icon: '🪞', title: '对着镜子用眼神和自己表白', desc: '去洗手间，站在镜子前，深情地凝视自己三秒。然后说："你今天真好看。"不许笑场。这是一场严肃的自我恋爱仪式。', tip: '进阶版：对镜子里的自己眨一下眼、比一个心。如果你脸红了——恭喜，你成功把自己撩到了。' },
+      { icon: '🧑‍✈️', title: '假装自己是新来的实习生', desc: '站起来，走到一个你每天都见的同事面前，伸出手说："你好，我是新来的，请多关照。"看看对方什么反应。', tip: '如果他真的开始给你介绍公司情况，请你一定要认真听完。这是你们友情的全新起点。' },
+      { icon: '🎤', title: '用笔当话筒采访你的水杯', desc: '拿起笔，凑近你的水杯，严肃地问："请问您对今天的办公室温度有什么看法？"停顿三秒，点点头说"好的，感谢您接受采访"。', tip: '如果你想扩大采访范围，可以继续采访你的键盘、鼠标和显示器。做一期"办公用品对职场环境的看法"系列报道。' },
+    ],
+    难过: [
+      { icon: '🍃', title: '让花瓣住进本子', desc: '去楼下捡一片落花或者好看的叶子，夹进你的笔记本里。它会慢慢变成书签。这一页会记住今天的温度和你。', tip: '过几个月翻到这一页的时候，叶子会变成干燥的琥珀色，像一封来自过去的小情书。' },
+      { icon: '🐜', title: '和蚂蚁排排走', desc: '去楼下找一队正在搬家的蚂蚁。蹲下来看它们忙忙碌碌。你会发现，连蚂蚁都在努力生活，而它们甚至不会难过。', tip: '试着跟着蚂蚁的队伍走几步。如果走到尽头发现是个垃圾桶——没关系，人生就是这样，终点不重要，过程很有趣。' },
+      { icon: '🌧️', title: '和雨声待一会儿', desc: '如果今天下雨就太好了。找一个能听到雨声的角落，什么也不做，就听。如果没下雨，就闭上眼假装下了。谁规定想象中的雨不算雨呢。', tip: '试着分辨雨落在不同东西上的声音——落在树叶上是"沙沙"，落在铁皮上是"叮叮"，落在心上是"好了好了，会好的"。' },
+      { icon: '🌾', title: '摸摸一棵树', desc: '去园区里找一棵树，把手掌贴在树干上。感受那种粗糙的、古老的、不说话但一直在的力量。树不会安慰你，但它稳稳地站在那里，这本身就够了。', tip: '如果你愿意，可以小声跟它说几句话。树会替你保密的——它已经保守了几十年的秘密了。' },
+      { icon: '📮', title: '给同桌写一张纸条', desc: '撕下一小片纸，写一句"谢谢你今天也坐在旁边"。偷偷放到同桌桌上。不署名。制造一个温暖的小悬案。', tip: '难过的时候做一件让别人开心的事，是一种很高级的自我疗愈——快乐会绕一个圈回到你身上。' },
+      { icon: '🐌', title: '找一只蜗牛，陪它走一段', desc: '雨后的墙角和花坛边最容易找到蜗牛。蹲下来，看它用全世界最慢的速度认真赶路。慢慢来，没关系的。', tip: '蜗牛的世界观大概是：虽然慢，但我背着整个家呢。想想还挺励志的。' },
+      { icon: '🕊️', title: '对着天空说一句心里话', desc: '走到没人的地方，抬头看着天空，把憋在心里的那句话说出来。不用太大声，风会帮你带走它。', tip: '说什么都可以。"好累啊""我想吃火锅""为什么事情这么难"——说出来就轻了一点。' },
+      { icon: '🌙', title: '给难过取个名字，然后解雇它', desc: '在纸上写："今日难过先生/女士，你被解雇了。请在日落前离开。"然后把纸叠成飞机，扔出窗外。仪式感拉满。', tip: '如果纸飞机飞得不远也没关系——你的难过也就飞那么远了，很快就到头了。' },
+      { icon: '🧳', title: '收拾东西假装要走', desc: '打开你的包，往里面放一支笔、一个杯子。站起来，深吸一口气，表情凝重地望向远方。停顿五秒后——把东西放回去，坐下，继续上班。这是一次"精神辞职"，爽了但没事。', tip: '如果有人紧张地问你"你要走？"就说"我只是在整理包"。但你和你自己知道，刚才那五秒钟，你是自由的。' },
+      { icon: '💧', title: '对着一滩水坑照镜子', desc: '如果楼下有水洼，走过去看看你在水里的倒影。向它挥挥手。你在地面上难过，但水里的那个你看起来在另一个平行世界过得还不错。', tip: '往水坑里扔一片叶子，看它漂走——假装那是一艘载着你的烦恼的小船，开往远方。' },
+      { icon: '📜', title: '写一份正式的"和坏心情断交书"', desc: '拿出一张纸，用最认真的笔迹写："本人XXX，兹决定与坏心情正式断绝一切关系，即刻生效。"签名，盖手指印（用圆珠笔画个圈也行）。', tip: '把它折好放进口袋。法律效力不一定有，但心理效力是满分的。' },
+    ],
+    平静: [
+      { icon: '🍂', title: '收集三片不同形状的叶子', desc: '去园区里散步，捡三片不一样的叶子。摸摸它们的纹路，闻闻它们的气味。把最好看的那片夹进工牌里。', tip: '你的工牌里除了一张不太上相的证件照以外，终于有了一样好看的东西。' },
+      { icon: '🪨', title: '找一块好看的石头', desc: '低头走路的时候留意脚下。找到一块顺眼的小石头，捡起来，揣进口袋。它现在是你的"平静石"，随时可以掏出来摸一摸。', tip: '在石头上画一个表情，它就变成了你的口袋朋友。开会无聊的时候偷偷捏一下它。' },
+      { icon: '🐛', title: '观察一只虫子的人生', desc: '找一只正在忙碌的小虫子，看它五分钟。它要去哪？它在想什么？它有deadline吗？大概率它的日子比你过得自由。', tip: '如果它是一只毛毛虫，你可以想想它将来变成蝴蝶的样子——每个打工人都有破茧的一天。' },
+      { icon: '💨', title: '出去吹一阵风', desc: '走到户外，找到一个风最大的角落。站在那里，张开双臂，让风把你吹得头发乱七八糟。你不是在摸鱼，你是在充电。', tip: '注意不要在领导面前做这个动作。如果被看到了，就说你在做"企业文化感悟——拥抱风的变革"。' },
+      { icon: '🫧', title: '对着一杯水发呆', desc: '倒一杯水，不喝。就看着它。看阳光在水面上跳舞，看小气泡从杯底冒上来。水什么都不做也可以很好看——你也是。', tip: '这是一种低配版冥想。如果有人问你在干嘛，就说"我在思考流体力学"。' },
+      { icon: '🌳', title: '靠着一棵树坐一会儿', desc: '找到园区里最粗的那棵树，背靠着它坐下来。什么都不做，就感受树荫的凉爽和树干传来的微微振动。', tip: '据不可靠的都市传说，靠树坐五分钟等于充电50%。你现在是半满状态，够撑到下班了。' },
+      { icon: '🗺️', title: '闭着眼睛在纸上画一座岛', desc: '闭上眼，拿笔在纸上画一个不规则的圈——这是你的岛。睁开眼，给它画上山、河流、小房子。这是只属于你的地方。', tip: '给你的岛取一个名字。比如"摸鱼仙境""永远不加班岛""周一不存在群岛"。' },
+      { icon: '🌬️', title: '数一数你能闻到几种气味', desc: '闭上眼睛，深深吸一口气。泥土味？花香？食堂饭菜？隔壁的咖啡？数一数你的鼻子能分辨几种气味。', tip: '人的鼻子能分辨一万亿种气味。你今天用了几种？别浪费了这个超级器官。' },
+      { icon: '👤', title: '跟着你的影子走', desc: '去有阳光的地方，低头看看你的影子。然后试着踩它的脚。它会一直躲。你们可以玩很久。', tip: '进阶玩法：给你的影子取个名字叫"小黑"。从此你不是一个人在上班了，你有搭子了。' },
+      { icon: '🧘', title: '假装自己是一棵树', desc: '站在窗边，双脚不动，双手慢慢举过头顶像树枝一样张开。保持一分钟。你是一棵不加班的树，风吹不倒你，deadline也不行。', tip: '如果有同事问你在干嘛，就说"我在做瑜伽里的树式"。很合理，无法反驳。但你知道，你就是一棵树。' },
+      { icon: '✉️', title: '用左手给右手写一封信', desc: '拿笔换到左手（或你不常用的那只手），给另一只手写一封道歉信："亲爱的右手，这些年打字辛苦你了。"字会歪歪扭扭的，但感情是真的。', tip: '如果写出来的字像幼儿园小朋友——那恭喜你，你短暂地变回了小孩子。' },
+    ],
+    兴奋: [
+      { icon: '💃', title: '和小花来一支舞', desc: '找到一朵在风里摇摆的花，跟着它的节拍跳起来。不需要舞步，不需要音乐——风就是你们的DJ。', tip: '注意选一朵节奏感好的花。那些纹丝不动的大概是在打节拍器，等它给你数三二一再开始。' },
+      { icon: '📢', title: '给对面桌的人讲个笑话', desc: '走到对面同事桌前，一本正经地说："我给你讲个笑话。"不管笑话好不好笑，你一脸认真的样子就已经很好笑了。', tip: '准备一个冷到结冰的笑话效果更佳。比如："你知道什么鱼最值钱吗？——金鱼。"然后转身离开。' },
+      { icon: '🦗', title: '帮一只虫子搬家', desc: '如果你在路上看到一只小虫子在往危险的地方爬，用一片叶子把它小心地托到安全地带。你刚刚拯救了一个小世界。', tip: '不过要确认它确实需要帮忙——也许它就是想去那边呢。尊重虫子的个人意愿很重要。' },
+      { icon: '🌂', title: '用雨伞打节拍', desc: '如果你有伞，拿出来用伞尖轻轻敲地面。打一段节拍。你是一个人的乐队。如果没伞，用笔敲桌子也行——万物皆可打击乐。', tip: '进阶挑战：用不同材质的桌面打出不同音色。玻璃桌是高音鼓，木桌是低音鼓，你的大腿是架子鼓。' },
+      { icon: '🐸', title: '在园区水池边蹲一会儿', desc: '如果园区有小水池或喷泉，走过去蹲在旁边。看看水里有没有鱼、有没有倒影、有没有一个看起来很兴奋的你。', tip: '忍住，不要跳进去。虽然你很兴奋，但你的工牌不防水。' },
+      { icon: '🎪', title: '宣布一件荒诞的事', desc: '在工位上站起来，对着空气郑重宣布："我宣布，今天下午三点是官方摸鱼时间。"然后坐下继续工作。仪式已经完成。', tip: '如果有人鼓掌，恭喜你，你找到了同类。如果没人搭理你，那说明你的演技还需要提升——更加投入一点。' },
+      { icon: '🌺', title: '给办公室每棵植物取名字', desc: '巡视一遍办公室里所有的绿植。给每一棵都取一个人名——"老张""翠花""Kevin"。从此以后上班就像来到一个热闹的村庄。', tip: '在便利贴上写好名字贴上去。明天来上班的同事会经历一段奇妙的认知之旅。' },
+      { icon: '🎈', title: '把塑料袋吹成气球', desc: '找一个干净的小塑料袋或者纸袋，吹满气，扎紧口。弹一弹它，拍一拍它。你现在拥有了全公司最廉价也最快乐的玩具。', tip: '高级玩法：在上面画一张脸。它现在叫"袋袋"，是你的新搭子。' },
+      { icon: '🏊', title: '在地板上假装游泳', desc: '找一个没人的会议室，趴在地上，做出蛙泳的动作。你在陆地上游泳。这件事很荒诞，但你的身体会感谢你——因为你终于离开椅子了。', tip: '如果你不想趴在地上，站着做游泳臂也可以。同事看到会觉得你在做一种先锋体操。' },
+      { icon: '🎩', title: '把外套反过来穿，看多久有人发现', desc: '悄悄把你的外套或者卫衣反过来穿上。然后正常走动、正常开会、正常喝水。计时开始——看谁第一个发现。', tip: '如果到下班都没人发现，那今天的冠军是你。如果有人发现了，就说"这是设计师款，你不懂"。' },
+      { icon: '📞', title: '假装接了一通很重要的电话', desc: '拿起手机（锁屏状态），表情严肃地说："嗯……好的……我知道了……这件事我来处理。"然后挂断，长舒一口气，露出"大事已定"的表情。', tip: '全程不超过15秒。但这15秒里，你是全办公室最有排面的人。' },
+    ],
+    激动: [
+      { icon: '🏃', title: '绕着园区的树跑一圈', desc: '选定一棵树，围着它慢跑三圈。你不是在健身——你是在进行一种古老的仪式，叫做"给激动找个出口"。', tip: '如果有人问你在干嘛，就说"我在绕桩训练"。自信一点，说不定他们会跟着一起跑。' },
+      { icon: '🌊', title: '往园区的河里扔颗石子', desc: '找一颗小石头，走到最近的水边，用力扔出去。看它溅起水花，看波纹一圈一圈扩散出去。你的激动也跟着散开了。', tip: '试试打水漂——如果石头弹了三次以上，今天的运气值+100。如果直接沉了，那就当给鱼加了个装饰品。' },
+      { icon: '🗣️', title: '对着大树说一段演讲', desc: '找一棵大树，站在它面前，慷慨激昂地说一段话。内容不限——可以是你的人生宣言，也可以是今天午饭为什么这么难吃。', tip: '树是最好的听众：不打断你、不反驳你、还一直在点头（风吹的）。' },
+      { icon: '🐝', title: '追着蝴蝶跑一段', desc: '如果看到一只蝴蝶，跟着它走几步。不是要抓它——只是想知道它要去哪里。也许它知道哪里有花海。', tip: '追蝴蝶这件事，小时候做叫"天真烂漫"，长大后做叫"行为艺术"。反正都很酷。' },
+      { icon: '📣', title: '用全身力气拍一下手', desc: '就一下。用你此刻全部的力气。啪！让整个办公室的空气震一震。这一掌拍出去，你的激动就释放了30%。', tip: '如果同事被吓到了，就说"刚才有蚊子"。冬天也这么说。蚊子也有加班的时候。' },
+      { icon: '🌬️', title: '对着蒲公英许个愿然后吹飞它', desc: '去草地上找一朵蒲公英。闭上眼，许一个大大的愿望，然后用力吹——看它的种子飞到天涯海角。你的愿望出发了。', tip: '如果找不到蒲公英，拿一张纸撕成碎片往天上一抛也行。许愿不挑道具，心意到了宇宙就收到了。' },
+      { icon: '🎵', title: '用手指敲一首歌的节奏', desc: '找一个你脑子里一直循环的歌，不出声，只用手指在桌子上敲出它的旋律。越来越快，越来越快——然后突然停下来。爽。', tip: '挑战模式：让旁边的人猜你在敲什么歌。如果猜对了，你们就是知音。如果猜不对，那是他们的损失。' },
+      { icon: '🧊', title: '把脸贴在冰凉的玻璃上', desc: '走到窗边，把脸颊贴在玻璃上。感受那种突如其来的"嘶——"凉意。激动的温度瞬间降了3度。', tip: '如果玻璃外面有人看到你，不要心虚。微笑着挥挥手。制造一个他们一辈子都忘不了的画面。' },
+      { icon: '🦸', title: '披着外套从走廊跑过去', desc: '把外套搭在肩上不穿袖子，然后快步走过走廊。外套会像披风一样飘起来。你是这层楼的超级英雄。这不是幼稚，这是天赋。', tip: '最佳路线是从茶水间到你的工位这段。选一个有穿堂风的走廊效果更佳——披风起飞的那一刻，你就是漫威宇宙的人。' },
+      { icon: '🪑', title: '用转椅转到头晕', desc: '坐在转椅上，用脚蹬地，让自己转起来。越来越快。然后停下来——世界在晃，但你在笑。简单粗暴的激动释放法。', tip: '注意安全，别转飞出去。如果头晕了就趴桌上歇一会儿。你不是在偷懒，你是在"眩晕恢复期"。' },
+      { icon: '🧲', title: '假装地板是岩浆，只能踩砖缝走', desc: '从你的工位到茶水间这段路，假装地板是岩浆。你只能踩地砖的缝隙/特定颜色的砖。一脚踩错——game over，重新来。', tip: '这个游戏你小时候一定玩过。区别是现在你穿着皮鞋在办公室玩。但快乐的纯度和8岁时一模一样。' },
+    ],
+    无语: [
+      { icon: '🐛', title: '用七星瓢虫当帽子', desc: '好吧这个有点难——但是你可以去找一只瓢虫，让它爬到你的手指上。看着这颗红色的小圆点在你手上散步。如果它飞走了，就当它有急事。', tip: '在内心对它说："小兄弟，你能理解我今天有多无语吗。"它会扇扇翅膀。你就当它说"能"了。' },
+      { icon: '🗿', title: '和一块石头面面相觑', desc: '找一块石头，放在桌上。盯着它。它也盯着你。你们就这样对视，谁也不说话。五分钟后你会发现——原来还有比你更无语的存在。', tip: '在石头上用涂改液画两个眼睛。现在它是你的"无语搭子"，职场中不可多得的盟友。' },
+      { icon: '😂', title: '给对面桌的人讲个烂笑话', desc: '走过去，严肃地说："我想跟你分享一个人生哲理。"然后讲一个烂到地心的笑话。他如果笑了——说明笑话挺好的。他如果没笑——说明你讲的方式挺好笑的。双赢。', tip: '经典烂笑话库存：问"你知道哪种动物最容易摔跤吗？"答："狐狸，因为它很狡猾（脚滑）"。' },
+      { icon: '🌿', title: '找一根草，嘴里叼着发呆', desc: '去楼下揪一根干净的草（或者用吸管代替），叼在嘴里，望向远方。你现在看起来像一个在思考人生的牧羊人。', tip: '配合双手插腰和微微眯眼的表情，哲学感直接拉满。路过的人会觉得你正在构思一部长篇小说。' },
+      { icon: '🐦', title: '学一种鸟叫', desc: '打开手机搜索"鸟叫声大全"，挑一种最好笑的，偷偷学。学会以后在合适的时机突然来一声——然后面不改色地继续工作。', tip: '推荐学布谷鸟——"布谷！布谷！"简洁有力，且不需要太高的音乐天赋。' },
+      { icon: '📎', title: '用回形针折一个小动物', desc: '拿一根回形针，把它掰成一个你觉得像动物的形状。不管它像不像，你说它是长颈鹿，它就是长颈鹿。艺术不需要被定义。', tip: '做完以后放在显示器上面。从此你的电脑上方住着一只回形针长颈鹿/恐龙/外星人。格调立刻不一样了。' },
+      { icon: '🪴', title: '正式任命一棵植物为你的精神导师', desc: '选一棵办公室里活得最顽强的绿植。走到它面前，严肃地说："从今天起你是我的人生导师。"然后鞠躬。感觉心灵得到了指引。', tip: '如果它是一棵快枯了还在努力的植物——那就更合适了。它教给你的比很多励志语录都多。' },
+      { icon: '🫥', title: '开一场一个人的新闻发布会', desc: '坐在座位上，清清嗓子，小声但严肃地说："感谢各位记者朋友。关于今天为什么无语这件事，我不做任何回应。发布会到此结束。"然后继续工作。', tip: '这种自言自语的行为如果被同事听到，你会收获一个关切的眼神。没关系，那叫"关注度"。' },
+      { icon: '🕶️', title: '戴着口罩假装自己是神秘人', desc: '戴上口罩，再戴上帽子（或者用卫衣帽子代替），走路的时候微微低头，步伐放慢。你是一个不想被人认出的大明星。你只是碰巧来这个办公室打工。', tip: '如果有人叫你名字，缓缓转头，停顿两秒，用很低的声音说"你认错人了"。然后走回自己工位坐下。' },
+      { icon: '🐟', title: '给饮水机写一封感谢信', desc: '撕一张便利贴，写上："亲爱的饮水机，感谢你每天无私地为我提供热水。你是我在这个公司最信任的同事。"贴在饮水机上。', tip: '明天来上班你会发现，要么便利贴被撕了，要么下面多了好几张别人写的感谢信。这叫"引发共鸣"。' },
+      { icon: '🎬', title: '对着窗户摆一个MV封面的姿势', desc: '走到窗前，选一个你觉得最帅/最美的角度，摆一个像专辑封面的pose。保持三秒。如果外面正好有光打进来——这张专辑今年必火。', tip: '可以用手机自拍记录下来。十年后翻到这张照片，你会感谢今天这个无语到极致、反而开始行为艺术的自己。' },
+    ]
+  };
+
+  // 星座运势文案
+  const zodiacFortune = {
+    '白羊座': '白羊的冲劲今天适合用来追蝴蝶，不适合用来追KPI',
+    '金牛座': '金牛今天的好运藏在一朵你还没注意到的小花里',
+    '双子座': '双子的两个灵魂今天可以轮流放假，一个摸鱼一个望风',
+    '狮子座': '今天的狮子不需要草原，办公室的绿植丛林就够你称王了',
+    '处女座': '处女座今天的完美主义建议用在给石头挑造型上',
+    '天秤座': '天秤座今天的好运在左手边——走出门往左看会遇到好事',
+    '天蝎座': '天蝎今天的神秘能量适合和一棵树进行心灵对话',
+    '射手座': '射手今天不需要远方，楼下的草地就是你的大草原',
+    '摩羯座': '摩羯今天的努力奖被一只蚂蚁领走了——学学它，搬完就歇',
+    '水瓶座': '水瓶今天的脑电波和窗外的鸟频率一致，适合互相交流',
+    '双鱼座': '双鱼今天的灵感会从一朵云、一片叶子或一阵风里冒出来',
+    '巨蟹座': '巨蟹今天的温柔雷达会捕捉到别人没注意到的美好小事',
+  };
+
+  // 状态
+  const state = { name: '', gender: '', zodiac: '', mood: '' };
+  let lastResult = null;
+
+  // 选项按钮逻辑
+  document.querySelectorAll('.option-group').forEach(group => {
+    const field = group.dataset.field;
+    group.querySelectorAll('.option-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        group.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state[field] = btn.dataset.value;
+        checkReady();
+      });
+    });
+  });
+
+  // 名字输入
+  const nameInput = document.getElementById('nameInput');
+  nameInput.addEventListener('input', () => {
+    state.name = nameInput.value.trim();
+    checkReady();
+  });
+
+  function checkReady() {
+    const ready = state.name && state.gender && state.zodiac && state.mood;
+    document.getElementById('submitBtn').disabled = !ready;
+  }
+
+  // 提交
+  document.getElementById('submitBtn').addEventListener('click', () => {
+    if (!state.name || !state.gender || !state.zodiac || !state.mood) return;
+    showResult();
+  });
+
+  // 换一个
+  document.getElementById('btnRetry').addEventListener('click', () => {
+    showResult(true);
+  });
+
+  // 重新填写
+  document.getElementById('btnAgain').addEventListener('click', () => {
+    document.getElementById('resultSection').classList.remove('show');
+    document.getElementById('inputSection').style.display = '';
+    // Reset
+    document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
+    nameInput.value = '';
+    state.name = ''; state.gender = ''; state.zodiac = ''; state.mood = '';
+    document.getElementById('submitBtn').disabled = true;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  function showResult(skipLoading) {
+    const pool = activities[state.mood] || activities['平静'];
+    let result;
+    do {
+      result = pool[Math.floor(Math.random() * pool.length)];
+    } while (result === lastResult && pool.length > 1);
+    lastResult = result;
+
+    if (skipLoading) {
+      renderResult(result);
+      return;
+    }
+
+    // 显示loading
+    const loading = document.getElementById('loading');
+    loading.classList.add('show');
+    document.getElementById('inputSection').style.display = 'none';
+
+    setTimeout(() => {
+      loading.classList.remove('show');
+      renderResult(result);
+    }, 1600);
+  }
+
+  function renderResult(result) {
+    const section = document.getElementById('resultSection');
+
+    const hourNow = new Date().getHours();
+    let greeting = '下午好';
+    if (hourNow < 6) greeting = '夜深了';
+    else if (hourNow < 11) greeting = '上午好';
+    else if (hourNow < 13) greeting = '中午好';
+    else if (hourNow < 18) greeting = '下午好';
+    else greeting = '晚上好';
+
+    document.getElementById('resultGreeting').textContent = greeting + '，摸鱼人';
+    document.getElementById('resultName').textContent = state.name;
+
+    // tags
+    const tagsHtml = [
+      state.zodiac,
+      state.mood,
+    ].map(t => `<span class="result-tag">${t}</span>`).join('');
+    document.getElementById('resultTags').innerHTML = tagsHtml;
+
+    // fortune
+    const fortune = zodiacFortune[state.zodiac] || '今天的星象很适合摸鱼';
+
+    document.getElementById('moyuIcon').textContent = result.icon;
+    document.getElementById('moyuTitle').textContent = result.title;
+    document.getElementById('moyuDesc').textContent = result.desc;
+    document.getElementById('moyuTip').innerHTML = `<strong>💡 小贴士：</strong>${result.tip}<br/><br/><strong>🔮 星座运势：</strong>${fortune}`;
+
+    // 重新触发动画
+    section.classList.remove('show');
+    void section.offsetWidth;
+    section.classList.add('show');
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+})();
+</script>
+</body>
+</html>
