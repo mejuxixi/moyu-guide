@@ -447,11 +447,6 @@
     <div class="input-section" id="inputSection">
       <div class="card">
         <div class="form-group">
-          <label class="form-label">你的名字</label>
-          <input type="text" class="form-input" id="nameInput" placeholder="请输入你的名字" maxlength="10" />
-        </div>
-
-        <div class="form-group">
           <label class="form-label">你的性别</label>
           <div class="option-group gender-group" data-field="gender">
             <button class="option-btn" data-value="男">🧑 男</button>
@@ -498,7 +493,6 @@
     <div class="result-section" id="resultSection">
       <div class="result-card">
         <div class="result-greeting" id="resultGreeting"></div>
-        <div class="result-name" id="resultName"></div>
         <div class="result-divider"></div>
         <div class="result-tags" id="resultTags"></div>
         <div class="moyu-icon" id="moyuIcon"></div>
@@ -617,7 +611,7 @@
   };
 
   // 状态
-  const state = { name: '', gender: '', zodiac: '', mood: '' };
+  const state = { gender: '', zodiac: '', mood: '' };
   let lastResult = null;
 
   // 选项按钮逻辑
@@ -633,21 +627,14 @@
     });
   });
 
-  // 名字输入
-  const nameInput = document.getElementById('nameInput');
-  nameInput.addEventListener('input', () => {
-    state.name = nameInput.value.trim();
-    checkReady();
-  });
-
   function checkReady() {
-    const ready = state.name && state.gender && state.zodiac && state.mood;
+    const ready = state.gender && state.zodiac && state.mood;
     document.getElementById('submitBtn').disabled = !ready;
   }
 
   // 提交
   document.getElementById('submitBtn').addEventListener('click', () => {
-    if (!state.name || !state.gender || !state.zodiac || !state.mood) return;
+    if (!state.gender || !state.zodiac || !state.mood) return;
     showResult();
   });
 
@@ -662,8 +649,7 @@
     document.getElementById('inputSection').style.display = '';
     // Reset
     document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
-    nameInput.value = '';
-    state.name = ''; state.gender = ''; state.zodiac = ''; state.mood = '';
+    state.gender = ''; state.zodiac = ''; state.mood = '';
     document.getElementById('submitBtn').disabled = true;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
@@ -704,7 +690,6 @@
     else greeting = '晚上好';
 
     document.getElementById('resultGreeting').textContent = greeting + '，摸鱼人';
-    document.getElementById('resultName').textContent = state.name;
 
     // tags
     const tagsHtml = [
